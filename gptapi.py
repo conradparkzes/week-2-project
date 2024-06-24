@@ -14,5 +14,3 @@ completion = client.chat.completions.create(
     ]
 )
 print(completion.choices[0].message.content) 
-
-#  edit
