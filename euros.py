@@ -3,6 +3,8 @@ import json
 import requests
 import sqlalchemy as db
 
+list_of_matches = []
+
 def getMatches(stage, teamA, teamB):
     #  params = stage, teamA, teamB
     url = "https://euro-20242.p.rapidapi.com/matches"
@@ -17,18 +19,32 @@ def getMatches(stage, teamA, teamB):
 
     #print(json.dumps(all_teams, indent=4))
 
-    match_facts = {}
+
+    
+
+
 
     winner = None
     for item in all_teams:
+        match_facts = {}
         if item['stage'] == stage:
-            if item['teamA']['team']['name'] == teamA:
+            if item['teamA']['team']['name'] == teamA: 
                 if item['teamB']['team']['name'] == teamB:
                    winner = item['winningTeam'] 
+                   match_facts['stage'] = stage
+                   match_facts['team_a'] = teamA
+                   match_facts['team_b'] = teamB
+                   team_a_score = item['teamA']['score']
+                   match_facts['team_a_score'] = team_a_score
+                   team_b_score = item['teamB']['score']
+                   match_facts['team_b_score'] = team_b_score
                    match_facts['winning team'] = winner
+                   list_of_matches.append(match_facts)
 
+
+    return list_of_matches
     #print(winner)
-    print(match_facts)
+    
 
 
 
@@ -40,6 +56,12 @@ def getMatches(stage, teamA, teamB):
 #'https://sports-api.cloudbet.com/pub/v2/odds/competitions/soccer-international-euro-cup'
 
 getMatches('groupStage', 'belgium', 'slovakia')
-
-
-
+getMatches('groupStage', 'germany', 'scotland')
+print(list_of_matches)
+dataf = pd.DataFrame(list_of_matches)
+    
+engine = db.create_engine('sqlite:///euros2024.db')
+dataf.to_sql('all_matches', con=engine, if_exists='replace', index=False)
+with engine.connect() as connection:
+    query_result = connection.execute(db.text("SELECT * FROM all_matches;")).fetchall()
+    print(pd.DataFrame(query_result))
