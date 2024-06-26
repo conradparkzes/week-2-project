@@ -14,8 +14,8 @@ def getMatches(stage, teamA, teamB):
 	"x-rapidapi-host": "euro-20242.p.rapidapi.com"
     }
 
-    response = requests.get(url, headers=headers)
-    all_teams = response.json()
+    respond = requests.get(url, headers=headers)
+    all_teams = respond.json()
 
     #print(json.dumps(all_teams, indent=4))
 
@@ -25,8 +25,8 @@ def getMatches(stage, teamA, teamB):
 
 
     winner = None
+    match_facts = {}
     for item in all_teams:
-        match_facts = {}
         if item['stage'] == stage:
             if item['teamA']['team']['name'] == teamA: 
                 if item['teamB']['team']['name'] == teamB:
@@ -39,25 +39,73 @@ def getMatches(stage, teamA, teamB):
                    team_b_score = item['teamB']['score']
                    match_facts['team_b_score'] = team_b_score
                    match_facts['winning team'] = winner
-                   list_of_matches.append(match_facts)
+                   
 
 
-    return list_of_matches
     #print(winner)
     
 
+    url_rankings = "https://footapi7.p.rapidapi.com/api/rankings/uefa/countries"
 
+    headers = {
+	    "x-rapidapi-key": "f4dc7ad289mshc637ece0d7896b0p1f223fjsndd4ae4e349b8",
+	    "x-rapidapi-host": "footapi7.p.rapidapi.com"
+    }
 
+    response = requests.get(url_rankings, headers=headers)
+    all_rankings = response.json()
+    #print(response.json())
 
+    teamA_upper = teamA[0].upper() + teamA[1:]
+    teamB_upper = teamB[0].upper() + teamB[1:]
+    #print(teamA_upper)
 
+    #print(all_rankings['rankings'][0]['rowName']) --> prints out England
 
-# curl -X 'GET' -H 'accept: application/json' -H 'X-API-Key: 
-#eyJhbGciOiJSUzI1NiIsImtpZCI6Img4LThRX1YwZnlUVHRPY2ZXUWFBNnV2bktjcnIyN1YzcURzQ2Z4bE44MGMiLCJ0eXAiOiJKV1QifQ.eyJhY2Nlc3NfdGllciI6ImFmZmlsaWF0ZSIsImV4cCI6MjAzNDYyMzg4MSwiaWF0IjoxNzE5MjYzODgxLCJqdGkiOiIzYzJlZDYwZi05Mzc2LTRkY2YtOTgwZi0wNzFkZjE2N2ZmNmYiLCJzdWIiOiI3Nzg0OGQ1My03NmNiLTQ1NzMtYjlkZC1hMWY2YjM5NDUxYjQiLCJ0ZW5hbnQiOiJjbG91ZGJldCIsInV1aWQiOiI3Nzg0OGQ1My03NmNiLTQ1NzMtYjlkZC1hMWY2YjM5NDUxYjQifQ.jDm9M1fI6dwQiLFIuJQi0GfI9Fz6EKJfghElky1c8BUT65FBlIBB4QiHZ17SxqePiwXw9pwJU_LBM4Buhu3rEXPAaLznRLaewP4ezRHZsSrzyCAwFolvkKNXuM4GcaJAFjPJXdBrFJeYc8pNtN-503FuwxTuivf5i_zm9vYFYVtMJwOlRcnjJsN6GP4OMho7DmZfFrmGenZBoKh8cIHV-QYvksZOtnx_X8ygmYabxKlHchoN0MgQV7qQpPDkodlc9V1KnYspA-isC7qn9eQS_phRFV1GVLzjSAGWjnrQpo6lmEObD_JWOU260goi9Anq-jjGAzVLeqk5Wa1hlaFrxg' \
-#'https://sports-api.cloudbet.com/pub/v2/odds/competitions/soccer-international-euro-cup'
+    #return 
+    points_teamA = None
+    points_teamB = None
+    
+    # Iterate through the rankings to find the points for teamA and teamB
+    for all_countries in all_rankings['rankings']:
+        # row_name = ranking["rowName"].upper()
+        if all_countries['rowName'] == teamA_upper:
+            points_teamA = all_countries["points"]
+        elif all_countries['rowName'] == teamB_upper:
+            points_teamB = all_countries["points"]
+
+    print(points_teamA)
+    print(points_teamB)
+
+    exp_team_name = None
+
+    if points_teamA > points_teamB:
+        exp_team_name = teamA
+    elif points_teamB > points_teamA:
+        exp_team_name = teamB
+    else:
+        exp_team_name = "Draw"
+
+    more_points = max(points_teamA, points_teamB)
+    less_points = min(points_teamA, points_teamB)
+
+    exp = int(more_points//less_points)
+
+    if exp_team_name == "Draw":
+        match_facts['expectation'] = 'Draw'
+    else:
+        match_facts['expectation'] =  f'+{exp} {exp_team_name}'
+    list_of_matches.append(match_facts)
+
+    return list_of_matches
+    
+
 
 getMatches('groupStage', 'belgium', 'slovakia')
 getMatches('groupStage', 'germany', 'scotland')
-print(list_of_matches)
+#print(list_of_matches)
+
+
 dataf = pd.DataFrame(list_of_matches)
     
 engine = db.create_engine('sqlite:///euros2024.db')
@@ -65,3 +113,5 @@ dataf.to_sql('all_matches', con=engine, if_exists='replace', index=False)
 with engine.connect() as connection:
     query_result = connection.execute(db.text("SELECT * FROM all_matches;")).fetchall()
     print(pd.DataFrame(query_result))
+
+
