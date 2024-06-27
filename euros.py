@@ -23,16 +23,16 @@ def getMatches(stage, teamA, teamB):
         if item['stage'] == stage:
             if item['teamA']['team']['name'] == teamA:
                 if item['teamB']['team']['name'] == teamB:
-                        winner = item['winningTeam']
-                        match_facts['stage'] = stage
-                        match_facts['team_a'] = teamA
-                        match_facts['team_b'] = teamB
-                        team_a_score = item['teamA']['score']
-                        match_facts['team_a_score'] = team_a_score
-                        team_b_score = item['teamB']['score']
-                        match_facts['team_b_score'] = team_b_score
-                        match_facts['winning team'] = winner
-        
+                    winner = item['winningTeam']
+                    match_facts['stage'] = stage
+                    match_facts['team_a'] = teamA
+                    match_facts['team_b'] = teamB
+                    team_a_score = item['teamA']['score']
+                    match_facts['team_a_score'] = team_a_score
+                    team_b_score = item['teamB']['score']
+                    match_facts['team_b_score'] = team_b_score
+                    match_facts['winning team'] = winner
+
     url_rankings =
     "https://footapi7.p.rapidapi.com/api/rankings/uefa/countries"
 
