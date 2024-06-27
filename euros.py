@@ -37,9 +37,9 @@ def getMatches(stage, teamA, teamB):
     "https://footapi7.p.rapidapi.com/api/rankings/uefa/countries"
 
     headers = {
-	    "x-rapidapi-key": "f4dc7ad289mshc637ece0d7896b0p1f223fjsndd4ae4e349b8",
-	    "x-rapidapi-host": "footapi7.p.rapidapi.com"
-    }
+	"x-rapidapi-key": "f4dc7ad289mshc637ece0d7896b0p1f223fjsndd4ae4e349b8",
+	"x-rapidapi-host": "footapi7.p.rapidapi.com"
+}
 
     response = requests.get(url_rankings, headers=headers)
     all_rankings = response.json()
