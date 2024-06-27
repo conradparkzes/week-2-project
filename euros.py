@@ -5,12 +5,13 @@ import sqlalchemy as db
 
 list_of_matches = []
 
+
 def getMatches(stage, teamA, teamB):
     url = "https://euro-20242.p.rapidapi.com/matches"
 
     header = {
-	"x-rapidapi-key": "462634edaamshbb062caa9f855bfp1d5ea4jsna71d5565c6f4",
-	"x-rapidapi-host": "euro-20242.p.rapidapi.com"
+	    "x-rapidapi-key": "462634edaamshbb062caa9f855bfp1d5ea4jsna71d5565c6f4",
+	    "x-rapidapi-host": "euro-20242.p.rapidapi.com"
     }
 
     output = requests.get(url, headers=header)
@@ -20,9 +21,9 @@ def getMatches(stage, teamA, teamB):
     match_facts = {}
     for item in all_teams:
         if item['stage'] == stage:
-            if item['teamA']['team']['name'] == teamA: 
+            if item['teamA']['team']['name'] == teamA:
                 if item['teamB']['team']['name'] == teamB:
-                   winner = item['winningTeam'] 
+                   winner = item['winningTeam']
                    match_facts['stage'] = stage
                    match_facts['team_a'] = teamA
                    match_facts['team_b'] = teamB
@@ -32,9 +33,8 @@ def getMatches(stage, teamA, teamB):
                    match_facts['team_b_score'] = team_b_score
                    match_facts['winning team'] = winner
                    
-    
-
-    url_rankings = "https://footapi7.p.rapidapi.com/api/rankings/uefa/countries"
+    url_rankings = 
+    "https://footapi7.p.rapidapi.com/api/rankings/uefa/countries"
 
     headers = {
 	    "x-rapidapi-key": "f4dc7ad289mshc637ece0d7896b0p1f223fjsndd4ae4e349b8",
@@ -75,16 +75,13 @@ def getMatches(stage, teamA, teamB):
     if exp_team_name == "Draw":
         match_facts['expectation'] = 'Draw'
     else:
-        match_facts['expectation'] =  f'+{exp} {exp_team_name}'
+        match_facts['expectation'] = f'+{exp} {exp_team_name}'
     list_of_matches.append(match_facts)
 
     return list_of_matches
     
-
-
 getMatches('groupStage', 'belgium', 'slovakia')
 getMatches('groupStage', 'germany', 'scotland')
-
 
 dataf = pd.DataFrame(list_of_matches)
     
@@ -93,5 +90,3 @@ dataf.to_sql('all_matches', con=engine, if_exists='replace', index=False)
 with engine.connect() as connection:
     query_result = connection.execute(db.text("SELECT * FROM all_matches;")).fetchall()
     print(pd.DataFrame(query_result))
-
-
