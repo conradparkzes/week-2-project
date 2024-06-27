@@ -7,10 +7,11 @@ list_of_matches = []
 
 
 def getMatches(stage, teamA, teamB):
+    global list_of_matches
     url_match_info = "https://euro-20242.p.rapidapi.com/matches"
 
     header = {
-        "x-rapidapi-key": "462634edaamshbb062caa9f855bfp1d5ea4jsna71d5565c6f4",
+        "x-rapidapi-key": "198410ca98mshf04347dff7b21fcp15903fjsne07b9fe16cc6",
         "x-rapidapi-host": "euro-20242.p.rapidapi.com"
     }
 
@@ -21,23 +22,31 @@ def getMatches(stage, teamA, teamB):
     # each match will get its own dictionary of data
     match_facts = {}
     for item in all_teams:
-        if item['stage'] == stage:
-            if item['teamA']['team']['name'] == teamA:
-                if item['teamB']['team']['name'] == teamB:
-                    winner = item['winningTeam']
-                    match_facts['stage'] = stage
-                    match_facts['team_a'] = teamA
-                    match_facts['team_b'] = teamB
-                    team_a_score = item['teamA']['score']
-                    match_facts['team_a_score'] = team_a_score
-                    team_b_score = item['teamB']['score']
-                    match_facts['team_b_score'] = team_b_score
-                    match_facts['winning team'] = winner
+        if item['isFinished'] == True:
+            if item['stage'] == stage:
+                if item['teamA']['team']['name'] == teamA:
+                    if item['teamB']['team']['name'] == teamB:
+                        winner = item['winningTeam']
+                        match_facts['stage'] = stage
+                        match_facts['team_a'] = teamA
+                        match_facts['team_b'] = teamB
+                        team_a_score = item['teamA']['score']
+                        match_facts['team_a_score'] = team_a_score
+                        team_b_score = item['teamB']['score']
+                        match_facts['team_b_score'] = team_b_score
+                        match_facts['winning team'] = winner
+                        break
+
+    #  error handling: incorrect syntax of inputted information
+    if not match_facts:
+        print("Incorrect input, please check specifics of match information entered.")
+        print(f"No existing match for input: {stage}, {teamA}, {teamB}.")
+        return
 
     url_rank = "https://footapi7.p.rapidapi.com/api/rankings/uefa/countries"
 
     headers = {
-        "x-rapidapi-key": "f4dc7ad289mshc637ece0d7896b0p1f223fjsndd4ae4e349b8",
+        "x-rapidapi-key": "198410ca98mshf04347dff7b21fcp15903fjsne07b9fe16cc6",
         "x-rapidapi-host": "footapi7.p.rapidapi.com"
     }
 
@@ -78,21 +87,30 @@ def getMatches(stage, teamA, teamB):
         match_facts['expectation'] = 'Draw'
     else:
         match_facts['expectation'] = f'+{exp} {exp_team_name}'
-    list_of_matches.append(match_facts)
+    if match_facts not in list_of_matches:
+        list_of_matches.append(match_facts)
 
     return list_of_matches
 
 
-getMatches('groupStage', 'belgium', 'slovakia')
+#getMatches('groupStage', 'belgium', 'slovakia')
+#getMatches('groupStage', 'scotland', 'germany')
 getMatches('groupStage', 'germany', 'scotland')
+#getMatches('groupStage', 'narnia', 'scotland')
+#getMatches('groupstage', 'germany', 'scotland')
+#getMatches('roundOfSixteen', 'switzerland', 'italy')
 
-# hnndling creating the SQL table
-dataf = pd.DataFrame(list_of_matches)
-engine = db.create_engine('sqlite:///euros2024.db')
-dataf.to_sql('all_matches', con=engine, if_exists='replace', index=False)
-with engine.connect() as connection:
-    query_result = (
-        connection.execute(db.text("SELECT * FROM all_matches;"))
-        .fetchall()
-    )
-    print(pd.DataFrame(query_result))
+# handling creating the SQL table
+
+if not list_of_matches:
+    print("Unable to create table.")
+else:
+    dataf = pd.DataFrame(list_of_matches)
+    engine = db.create_engine('sqlite:///euros2024.db')
+    dataf.to_sql('all_matches', con=engine, if_exists='replace', index=False)
+    with engine.connect() as connection:
+        query_result = (
+            connection.execute(db.text("SELECT * FROM all_matches;"))
+            .fetchall()
+        )
+        print(pd.DataFrame(query_result))
