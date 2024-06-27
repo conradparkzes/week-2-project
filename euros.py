@@ -11,7 +11,7 @@ def getMatches(stage, teamA, teamB):
 
     header = {
         "x-rapidapi-key": "462634edaamshbb062caa9f855bfp1d5ea4jsna71d5565c6f4",
-    "x-rapidapi-host": "euro-20242.p.rapidapi.com"
+        "x-rapidapi-host": "euro-20242.p.rapidapi.com"
 }
 
     output = requests.get(url, headers=header)
