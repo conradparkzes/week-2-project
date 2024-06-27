@@ -27,7 +27,11 @@ bracket displays germany vs. scotland. refer to this [site](https://www.espn.com
 for the correct order 
     - the game must be completed, any future game that has not yet occurred
 is invalid input. incorrect input will warrant an error statement in the terminal
-- you can make as many calls to getMatches as you would like and we
-will print a neatly organized table to your terminal with the competitors,
+- you can make as many calls to getMatches as you would like. when ready,
+open the terminal, make sure you're in week-2-project, and run:
+```
+python3 euros.py
+```
+which will print a neatly organized table to your terminal with the competitors,
 the winner, the score, and the expected result based on this [site](https://www.uefa.com/nationalassociations/uefarankings/country/?year=2024)
-that ranks every European nation on a points system.
+that ranks every European nation on a points system
