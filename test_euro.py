@@ -1,0 +1,38 @@
+import unittest
+from euros import getMatches
+
+class TestEuros(unittest.TestCase):
+
+    def test_getMatches(self):
+        test_1 = [{'stage':'groupStage', 'team_a':'germany', 
+                        'team_b':'scotland', 'team_a_score':5, 'team_b_score':1,
+                        'winning team':'germany', 'expectation':'+2 germany'}]
+        #self.assertEqual(getMatches('groupStage', 'germany', 'scotland'),test_1)
+
+        #test_2 = [{'stage':'groupStage', 'team_a':'netherlands', 'team_b':'austria', 
+                        #'team_a_score':2, 'team_b_score':3, 'winning team':'austria',
+                        #'expectation':'+1 netherlands'}]
+        #self.assertEqual(getMatches('groupStage', 'netherlands', 'austria'), test_2)
+
+        #test_3 = [{'stage':'groupStage', 'team_a':'france', 'team_b':'poland', 
+                        #'team_a_score':1, 'team_b_score':1, 'winning team':'draw',
+                        #'expectation':'+2 france'}]
+        #self.assertEqual(getMatches('groupStage', 'france', 'poland'), test_3)
+        #test_4 = [{}]
+        #self.assertEqual(getMatches('groupStage', 'spain', 'georgia'), test_4)
+
+        self.assertEqual(getMatches(), test_1)
+        #self.assertEqual(getMatches(), test_2)
+        #self.assertEqual(getMatches(), test_3)
+        #self.assertEqual(getMatches('groupStage', 'spain', 'georgia'), test_4)
+    #def test_getMatches2(self):
+        #test_2 = [{'stage':'groupStage', 'team_a':'netherlands', 'team_b':'austria', 
+                        #'team_a_score':2, 'team_b_score':3, 'winning team':'austria',
+                        #'expectation':'+1 netherlands'}]
+        #self.assertEqual(getMatches(), test_2)
+    #def test_getMatches3(self):
+        #test_3 = [{'stage':'groupStage', 'team_a':'france', 'team_b':'poland', 
+                        #'team_a_score':1, 'team_b_score':1, 'winning team':'draw',
+                        #'expectation':'+2 france'}]
+        #self.assertEqual(getMatches(), test_3)
+

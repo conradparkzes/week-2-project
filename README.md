@@ -19,7 +19,7 @@ is the best.
 format, any other form will not work (groupStage, roundOfSixteen,
 semiFinal, quarterFinal, final)
     - team names must be all lowercase, with a space if necessary
-(england, czech republic, turkiye, netherlands)
+(england, netherlands, france, switzerland, etc)
     - team names must be in order of how they are displayed on the
 brackets. ex: on day 1, germany and scotland competed. entering
 getMatches(groupStage, scotland, germany) will NOT work because every

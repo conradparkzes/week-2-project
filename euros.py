@@ -6,12 +6,32 @@ import sqlalchemy as db
 list_of_matches = []
 
 
-def getMatches(stage, teamA, teamB):
+def getMatches():
+
+    stage = input("Enter the stage of tournament match: ")
+    stages = ['groupStage', 'roundOfSixteen', 'quarterFinals', 'semiFinals', 'finals']
+    if stage not in stages:
+        print("Incorrect stage, please check README for valid options.")
+        return
+
+    teamA = input("Enter team A: ")
+    teamB = input("Enter team B: ")
+    print("")
+
+    
+    countries = ['germany', 'switzerland', 'hungary', 'scotland', 'spain', 'italy', 'croatia',
+    'albania', 'england', 'denmark', 'slovenia', 'serbia', 'austria', 'france', 'netherlands',
+    'poland', 'romania', 'belgium', 'slovakia', 'ukraine', 'portugal', 'turkey', 'georgia']
+    'czech republic' 
+
+    if teamA not in countries or teamB not in countries:
+        print("Incorrect country name, please check README for valid options.")
+        return
     global list_of_matches
     url_match_info = "https://euro-20242.p.rapidapi.com/matches"
 
     header = {
-        "x-rapidapi-key": "198410ca98mshf04347dff7b21fcp15903fjsne07b9fe16cc6",
+        "x-rapidapi-key": "6a35ad4b04mshdf6286ce0a54eb3p12ae81jsn647a25666605",
         "x-rapidapi-host": "euro-20242.p.rapidapi.com"
     }
 
@@ -46,7 +66,7 @@ def getMatches(stage, teamA, teamB):
     url_rank = "https://footapi7.p.rapidapi.com/api/rankings/uefa/countries"
 
     headers = {
-        "x-rapidapi-key": "198410ca98mshf04347dff7b21fcp15903fjsne07b9fe16cc6",
+        "x-rapidapi-key": "6a35ad4b04mshdf6286ce0a54eb3p12ae81jsn647a25666605",
         "x-rapidapi-host": "footapi7.p.rapidapi.com"
     }
 
@@ -75,7 +95,7 @@ def getMatches(stage, teamA, teamB):
     elif points_teamB > points_teamA:
         exp_team_name = teamB
     else:
-        exp_team_name = "Draw"
+        exp_team_name = "draw"
 
     more_points = max(points_teamA, points_teamB)
     less_points = min(points_teamA, points_teamB)
@@ -83,34 +103,38 @@ def getMatches(stage, teamA, teamB):
     # ratio of goals for expected winning team
     exp = int(more_points//less_points)
 
-    if exp_team_name == "Draw":
-        match_facts['expectation'] = 'Draw'
+    if exp_team_name == "draw":
+        match_facts['expectation'] = 'draw'
     else:
         match_facts['expectation'] = f'+{exp} {exp_team_name}'
     if match_facts not in list_of_matches:
         list_of_matches.append(match_facts)
 
+    make_table()
+
     return list_of_matches
-
-
-#getMatches('groupStage', 'belgium', 'slovakia')
-#getMatches('groupStage', 'scotland', 'germany')
-getMatches('groupStage', 'germany', 'scotland')
-#getMatches('groupStage', 'narnia', 'scotland')
-#getMatches('groupstage', 'germany', 'scotland')
-#getMatches('roundOfSixteen', 'switzerland', 'italy')
 
 # handling creating the SQL table
 
-if not list_of_matches:
-    print("Unable to create table.")
-else:
-    dataf = pd.DataFrame(list_of_matches)
-    engine = db.create_engine('sqlite:///euros2024.db')
-    dataf.to_sql('all_matches', con=engine, if_exists='replace', index=False)
-    with engine.connect() as connection:
-        query_result = (
-            connection.execute(db.text("SELECT * FROM all_matches;"))
-            .fetchall()
-        )
-        print(pd.DataFrame(query_result))
+def make_table():
+    if not list_of_matches:
+        print("Unable to create table.")
+    else:
+        dataf = pd.DataFrame(list_of_matches)
+        engine = db.create_engine('sqlite:///euros2024.db')
+        dataf.to_sql('all_matches', con=engine, if_exists='replace', index=False)
+        with engine.connect() as connection:
+            query_result = (
+                connection.execute(db.text("SELECT * FROM all_matches;"))
+                .fetchall()
+            )
+            print(pd.DataFrame(query_result))
+
+print("")
+getMatches()
+
+while True:
+    answer = input("Would you like to search for another match? (yes/no) ")
+    if answer != 'yes':
+        break
+    getMatches()
