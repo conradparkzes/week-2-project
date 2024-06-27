@@ -10,7 +10,7 @@ def getMatches(stage, teamA, teamB):
     url = "https://euro-20242.p.rapidapi.com/matches"
 
     header = {
-    "x-rapidapi-key": "462634edaamshbb062caa9f855bfp1d5ea4jsna71d5565c6f4",
+        "x-rapidapi-key": "462634edaamshbb062caa9f855bfp1d5ea4jsna71d5565c6f4",
     "x-rapidapi-host": "euro-20242.p.rapidapi.com"
 }
 
