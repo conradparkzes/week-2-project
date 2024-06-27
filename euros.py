@@ -92,7 +92,7 @@ engine = db.create_engine('sqlite:///euros2024.db')
 dataf.to_sql('all_matches', con=engine, if_exists='replace', index=False)
 with engine.connect() as connection:
     query_result = (
-    connection.execute(db.text("SELECT * FROM all_matches;"))
-    .fetchall()
-)
+        connection.execute(db.text("SELECT * FROM all_matches;"))
+        .fetchall()
+    )
     print(pd.DataFrame(query_result))
