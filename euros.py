@@ -6,23 +6,15 @@ import sqlalchemy as db
 list_of_matches = []
 
 def getMatches(stage, teamA, teamB):
-    #  params = stage, teamA, teamB
     url = "https://euro-20242.p.rapidapi.com/matches"
 
-    headers = {
+    header = {
 	"x-rapidapi-key": "462634edaamshbb062caa9f855bfp1d5ea4jsna71d5565c6f4",
 	"x-rapidapi-host": "euro-20242.p.rapidapi.com"
     }
 
-    respond = requests.get(url, headers=headers)
-    all_teams = respond.json()
-
-    #print(json.dumps(all_teams, indent=4))
-
-
-    
-
-
+    output = requests.get(url, headers=header)
+    all_teams = output.json()
 
     winner = None
     match_facts = {}
@@ -40,9 +32,6 @@ def getMatches(stage, teamA, teamB):
                    match_facts['team_b_score'] = team_b_score
                    match_facts['winning team'] = winner
                    
-
-
-    #print(winner)
     
 
     url_rankings = "https://footapi7.p.rapidapi.com/api/rankings/uefa/countries"
@@ -54,28 +43,20 @@ def getMatches(stage, teamA, teamB):
 
     response = requests.get(url_rankings, headers=headers)
     all_rankings = response.json()
-    #print(response.json())
 
     teamA_upper = teamA[0].upper() + teamA[1:]
     teamB_upper = teamB[0].upper() + teamB[1:]
-    #print(teamA_upper)
 
-    #print(all_rankings['rankings'][0]['rowName']) --> prints out England
-
-    #return 
     points_teamA = None
     points_teamB = None
     
-    # Iterate through the rankings to find the points for teamA and teamB
+    # iterate through the rankings to find the points for teamA and teamB
     for all_countries in all_rankings['rankings']:
         # row_name = ranking["rowName"].upper()
         if all_countries['rowName'] == teamA_upper:
             points_teamA = all_countries["points"]
         elif all_countries['rowName'] == teamB_upper:
             points_teamB = all_countries["points"]
-
-    print(points_teamA)
-    print(points_teamB)
 
     exp_team_name = None
 
@@ -103,7 +84,6 @@ def getMatches(stage, teamA, teamB):
 
 getMatches('groupStage', 'belgium', 'slovakia')
 getMatches('groupStage', 'germany', 'scotland')
-#print(list_of_matches)
 
 
 dataf = pd.DataFrame(list_of_matches)
