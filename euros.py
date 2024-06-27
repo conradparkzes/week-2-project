@@ -23,17 +23,17 @@ def getMatches(stage, teamA, teamB):
         if item['stage'] == stage:
             if item['teamA']['team']['name'] == teamA:
                 if item['teamB']['team']['name'] == teamB:
-                   winner = item['winningTeam']
-                   match_facts['stage'] = stage
-                   match_facts['team_a'] = teamA
-                   match_facts['team_b'] = teamB
-                   team_a_score = item['teamA']['score']
-                   match_facts['team_a_score'] = team_a_score
-                   team_b_score = item['teamB']['score']
-                   match_facts['team_b_score'] = team_b_score
-                   match_facts['winning team'] = winner
-                   
-    url_rankings = 
+                        winner = item['winningTeam']
+                        match_facts['stage'] = stage
+                        match_facts['team_a'] = teamA
+                        match_facts['team_b'] = teamB
+                        team_a_score = item['teamA']['score']
+                        match_facts['team_a_score'] = team_a_score
+                        team_b_score = item['teamB']['score']
+                        match_facts['team_b_score'] = team_b_score
+                        match_facts['winning team'] = winner
+        
+    url_rankings =
     "https://footapi7.p.rapidapi.com/api/rankings/uefa/countries"
 
     headers = {
@@ -79,7 +79,8 @@ def getMatches(stage, teamA, teamB):
     list_of_matches.append(match_facts)
 
     return list_of_matches
-    
+
+
 getMatches('groupStage', 'belgium', 'slovakia')
 getMatches('groupStage', 'germany', 'scotland')
 
@@ -88,5 +89,6 @@ dataf = pd.DataFrame(list_of_matches)
 engine = db.create_engine('sqlite:///euros2024.db')
 dataf.to_sql('all_matches', con=engine, if_exists='replace', index=False)
 with engine.connect() as connection:
-    query_result = connection.execute(db.text("SELECT * FROM all_matches;")).fetchall()
+    query_result =
+    connection.execute(db.text("SELECT * FROM all_matches;")).fetchall()
     print(pd.DataFrame(query_result))
