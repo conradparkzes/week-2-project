@@ -43,7 +43,7 @@ def getMatches(stage, teamA, teamB):
 
     response = requests.get(url_rank, headers=headers)
     all_rankings = response.json()
-    
+
     # FootAPI capitalizes first letter, so editing country name
     teamA_upper = teamA[0].upper() + teamA[1:]
     teamB_upper = teamB[0].upper() + teamB[1:]
@@ -91,8 +91,8 @@ dataf = pd.DataFrame(list_of_matches)
 engine = db.create_engine('sqlite:///euros2024.db')
 dataf.to_sql('all_matches', con=engine, if_exists='replace', index=False)
 with engine.connect() as connection:
-    query_result = connection.execute(
-    db.text("SELECT * FROM all_matches;")
-).fetchall()
-
+    query_result = (
+    connection.execute(db.text("SELECT * FROM all_matches;"))
+    .fetchall()
+)
     print(pd.DataFrame(query_result))
