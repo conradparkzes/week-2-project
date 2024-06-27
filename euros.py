@@ -10,9 +10,9 @@ def getMatches(stage, teamA, teamB):
     url = "https://euro-20242.p.rapidapi.com/matches"
 
     header = {
-	    "x-rapidapi-key": "462634edaamshbb062caa9f855bfp1d5ea4jsna71d5565c6f4",
-	    "x-rapidapi-host": "euro-20242.p.rapidapi.com"
-    }
+    "x-rapidapi-key": "462634edaamshbb062caa9f855bfp1d5ea4jsna71d5565c6f4",
+    "x-rapidapi-host": "euro-20242.p.rapidapi.com"
+}
 
     output = requests.get(url, headers=header)
     all_teams = output.json()
@@ -49,7 +49,7 @@ def getMatches(stage, teamA, teamB):
 
     points_teamA = None
     points_teamB = None
-    
+
     # iterate through the rankings to find the points for teamA and teamB
     for all_countries in all_rankings['rankings']:
         # row_name = ranking["rowName"].upper()
@@ -85,7 +85,7 @@ getMatches('groupStage', 'belgium', 'slovakia')
 getMatches('groupStage', 'germany', 'scotland')
 
 dataf = pd.DataFrame(list_of_matches)
-    
+
 engine = db.create_engine('sqlite:///euros2024.db')
 dataf.to_sql('all_matches', con=engine, if_exists='replace', index=False)
 with engine.connect() as connection:
